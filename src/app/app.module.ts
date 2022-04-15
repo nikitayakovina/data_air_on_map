@@ -6,6 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import {AppComponent} from "./app.component";
 import { YandexMapsComponent } from './yandexMaps/yandex-maps/yandex-maps.component';
 import {AngularYandexMapsModule} from "angular8-yandex-maps";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import {AngularYandexMapsModule} from "angular8-yandex-maps";
     BrowserModule,
     AngularYandexMapsModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
