@@ -20,23 +20,12 @@ export class YandexMapsComponent {
   @Input() set center(value: number[]) {
     if (value) {
       this._center = value;
-      console.log(this._center)
-      // this.createMap();
     }
   }
   public get center(): number[] {
     return this._center;
   }
   constructor() {}
-
-  // public createMap(): void {
-  //   this.map = new ymaps.Map('map', {
-  //     center: [this._center.lat, this._center.lng],
-  //     zoom: this._zoom
-  //   });
-  //   const placeMark = new ymaps.Placemark([this._center.lat, this._center.lng]);
-  //   this.map.geoObjects.add(placeMark);
-  // }
 
   // public getSensors(): void {
   //   this.httpClient
