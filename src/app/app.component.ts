@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {Coordinates} from "./yandexMaps/types";
 
 @Component({
   selector: 'app-root',
@@ -8,8 +7,8 @@ import {Coordinates} from "./yandexMaps/types";
 })
 export class AppComponent implements OnInit {
   private _zoom: number = 12;
-  private _center: Array<Coordinates> = [];
-  public get center(): Array<Coordinates> {
+  private _center: number[] = [];
+  public get center(): number[] {
     return this._center;
   }
   public get zoom(): number {
@@ -23,7 +22,7 @@ export class AppComponent implements OnInit {
   public getLocation(): void {
     navigator.geolocation.getCurrentPosition(resp => {
       if (resp) {
-        this.center.push({ lat: resp.coords.latitude, lng: resp.coords.longitude });
+        this.center.push(resp.coords.latitude, resp.coords.longitude);
       }
     })
   }

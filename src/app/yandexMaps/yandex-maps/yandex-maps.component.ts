@@ -1,5 +1,4 @@
 import {Component, ElementRef, Input, ViewChild} from '@angular/core';
-import {Coordinates} from "../types";
 
 @Component({
   selector: 'app-yandex-maps',
@@ -9,7 +8,7 @@ import {Coordinates} from "../types";
 export class YandexMapsComponent {
   @ViewChild('yamaps')
   public el!: ElementRef;
-  private _center: Coordinates;
+  private _center: number[];
   private _zoom: number;
   public map: any;
   @Input() set zoom(value: number) {
@@ -18,25 +17,15 @@ export class YandexMapsComponent {
   public get zoom(): number {
     return this._zoom;
   }
-  @Input() set center(value: Coordinates) {
+  @Input() set center(value: number[]) {
     if (value) {
       this._center = value;
-      this.createMap();
     }
   }
-  public get center(): Coordinates {
+  public get center(): number[] {
     return this._center;
   }
   constructor() {}
-
-  public createMap(): void {
-    this.map = new ymaps.Map('map', {
-      center: [this._center.lat, this._center.lng],
-      zoom: this.zoom
-    })
-    const placeMark = new ymaps.Placemark([this._center.lat, this._center.lng]);
-    this.map.geoObjects.add(placeMark);
-  }
 
   // public getSensors(): void {
   //   this.httpClient
