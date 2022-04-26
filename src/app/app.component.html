@@ -1,1 +1,6 @@
-<app-yandex-maps *ngIf="center?.length" [center]="center" [zoom]="zoom"></app-yandex-maps>
+<div class="menu">
+  <button mat-button routerLink=''>Главная</button>
+  <button mat-button routerLink="/yandex-maps">Карта</button>
+  <button mat-button routerLink="/forecast">Прогноз</button>
+  <router-outlet></router-outlet>
+</div>
