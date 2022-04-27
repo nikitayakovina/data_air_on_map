@@ -13,6 +13,7 @@ import { ForecastComponent } from './forecast/forecast.component';
 import {LocationService} from "../service/location-service.service";
 import {SensorsService} from "../service/sensors-service.service";
 import {MatButtonModule} from "@angular/material/button";
+import {TableModule} from "primeng/table";
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import {MatButtonModule} from "@angular/material/button";
     RouterModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    MatButtonModule
+    MatButtonModule,
+    TableModule
   ],
   providers: [LocationService, SensorsService],
   bootstrap: [AppComponent]

@@ -13,7 +13,7 @@ export class ForecastComponent {
   private _sensors: any;
   constructor(private sensorsService: SensorsService) { }
   public get sensors(): any {
-    return this._sensors;
+    return this._sensors?.devices;
   }
 
   public getSensors(): void {
@@ -25,12 +25,14 @@ export class ForecastComponent {
         }))
         .subscribe((res) => {
           this._sensors = res;
-          console.log(res);
+          console.log(res)
         })
     });
   }
 
-  public getDiagram(): void {
-    this.sensorsService.getDiagram({ id: 1, uuid: this._uuid, apiKey: this._apiKey });
+  public getDiagram(id: number): void {
+    console.log(id)
+    this.sensorsService.getDiagram({ id: id, uuid: this._uuid, apiKey: this._apiKey })
+      .subscribe(res => console.log(res));
   }
 }

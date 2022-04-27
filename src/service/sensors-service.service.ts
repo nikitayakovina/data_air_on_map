@@ -15,7 +15,6 @@ export class SensorsService {
         &lon=${result.lng}
         &radius=200
         &types=1&uuid=48a0bc5153614888b2bc2a90781f3706&api_key=kSp52HtRnSang&lang=ru`);
-      // return this.httpClient.get('http://narodmon.ru/api/sensorsOnDevice?devices=1,2&uuid=48a0bc5153614888b2bc2a90781f3706&api_key=kSp52HtRnSang&lang=ru')
     });
   }
 
