@@ -14,6 +14,7 @@ import {LocationService} from "../service/location-service.service";
 import {SensorsService} from "../service/sensors-service.service";
 import {MatButtonModule} from "@angular/material/button";
 import {TableModule} from "primeng/table";
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import {TableModule} from "primeng/table";
     HttpClientModule,
     BrowserAnimationsModule,
     MatButtonModule,
-    TableModule
+    TableModule,
+    MatProgressBarModule
   ],
   providers: [LocationService, SensorsService],
   bootstrap: [AppComponent]
