@@ -24,6 +24,7 @@
     "@angular/router": "~13.0.0",
     "@tensorflow/tfjs": "^3.16.0",
     "@tensorflow/tfjs-backend-webgl": "^3.16.0",
+    "@types/offscreencanvas": "^2019.6.4",
     "angular-osm": "^1.2.2",
     "angular8-yandex-maps": "^13.2.0",
     "bootstrap": "^5.1.3",
