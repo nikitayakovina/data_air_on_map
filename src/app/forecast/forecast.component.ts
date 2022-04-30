@@ -1,9 +1,9 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import {SensorsService} from "../../service/sensors-service.service";
 import {catchError, of} from "rxjs";
 import {HttpClient} from "@angular/common/http";
-import {MatProgressBar} from "@angular/material/progress-bar";
 import * as tf from '@tensorflow/tfjs';
+import {DataForecast} from "../shared/types";
 
 @Component({
   selector: 'app-forecast',
@@ -11,15 +11,11 @@ import * as tf from '@tensorflow/tfjs';
   styleUrls: ['./forecast.component.css']
 })
 export class ForecastComponent {
-  private _sensors: any;
+  private _dataForForecast: Array<DataForecast> = [];
   public spinner: boolean = false;
-  @ViewChild('spinnerElement') spinnerElement: MatProgressBar;
-  constructor(private sensorsService: SensorsService, private http: HttpClient) { }
-  public get sensors(): any {
-    return this._sensors?.devices;
-  }
+  constructor(private sensorsService: SensorsService) { }
 
-  public getHistorySensors(): void {
+  public getSensors(): void {
     this.spinner = true;
     this.sensorsService.getSensorsHistory().then(result => {
       result
@@ -30,14 +26,32 @@ export class ForecastComponent {
         .subscribe((res) => {
           if (res) {
             this.spinner = false;
+            this.getSMA(this.dataConversion(res));
           }
-          this._sensors = res;
-          console.log(res)
         })
     });
   }
+  /* Преобразование полученных данных с API */
+  public dataConversion(historyData: object): Array<DataForecast> {
+    Object.keys(historyData).forEach(arr => {
+      if (arr === 'list'){
+        Object.keys(historyData[arr]).forEach(_arr => {
+          this._dataForForecast.push({ date: historyData[arr][_arr].dt, index: historyData[arr][_arr].main.aqi });
+        })
+      }
+    });
+    return this._dataForForecast;
+  }
+  /* Простая скользящая средняя (SMA) */
+  public getSMA(data: Array<DataForecast>): number {
+    let SMA: number = 0;
+    Object.keys(data).forEach(res => {
+      return SMA += data[res].index / data.length;
+    });
+    return SMA;
+  }
 
-  public async doForecast(history: any): Promise<void> {
-    // const model = await tf.loadLayersModel(history);
+  public trainModel(): void {
+    const model = tf.sequential();
   }
 }
