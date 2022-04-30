@@ -1,5 +1,6 @@
-<!--<ya-map *ngIf="center?.length" [center]="center" [zoom]="zoom">-->
-<!--  <ya-placemark [geometry]="center"></ya-placemark>-->
-<!--</ya-map>-->
-<!--<ya-map [center]="[82.9292544,55.0076416]" [zoom]="12"></ya-map>-->
-<div #yamaps></div>
+<mat-progress-bar *ngIf="!center?.length" [mode]="'indeterminate'" [color]="'primary'"></mat-progress-bar>
+<div class="container">
+  <ya-map *ngIf="center?.length" [center]="center" [zoom]="zoom">
+    <ya-placemark [geometry]="center"></ya-placemark>
+  </ya-map>
+</div>

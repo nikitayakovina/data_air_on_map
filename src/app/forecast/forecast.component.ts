@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {SensorsService} from "../../service/sensors-service.service";
 import {catchError, of} from "rxjs";
+import {HttpClient} from "@angular/common/http";
+import {MatProgressBar} from "@angular/material/progress-bar";
 // import * as tf from '@tensorflow/tfjs';
 
 @Component({
@@ -13,24 +15,31 @@ export class ForecastComponent {
   private _apiKey = 'kSp52HtRnSang';
   private _sensors: any;
   private _historySensors: any;
-  constructor(private sensorsService: SensorsService) { }
+  public spinner: boolean = false;
+  @ViewChild('spinnerElement') spinnerElement: MatProgressBar;
+  constructor(private sensorsService: SensorsService, private http: HttpClient) { }
   public get sensors(): any {
     return this._sensors?.devices;
   }
 
   public getSensors(): void {
-    this.sensorsService.getSensors().then(result => {
+    this.spinner = true;
+    this.sensorsService.getSensorsHistory().then(result => {
       result
         .pipe(catchError(e => {
           alert(e);
           return of(e);
         }))
         .subscribe((res) => {
+          if (res) {
+            this.spinner = false;
+          }
           this._sensors = res;
+          console.log(res)
         })
     });
   }
-
+/* history sensors by idSensors */
   public getDiagram(id: number): void {
     this.sensorsService
       .getDiagram({ id: id, uuid: this._uuid, apiKey: this._apiKey })
@@ -39,7 +48,8 @@ export class ForecastComponent {
         return of(e);
       }))
       .subscribe(res => {
-        this.doForecast(res);
+        console.log(res)
+        // this.doForecast(res);
       });
   }
 
