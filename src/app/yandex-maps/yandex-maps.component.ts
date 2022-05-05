@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { LocationService } from "../../service/location-service.service";
+import {Component, OnInit} from '@angular/core';
+import {LocationService} from "../../service/location-service.service";
 import {MarkersService} from "../../service/markers-service.service";
 import {SensorsService} from "../../service/sensors-service.service";
+import {ColorAir} from "../shared/enums";
+import * as moment from "moment";
 
 @Component({
   selector: 'app-yandex-maps',
@@ -10,7 +12,6 @@ import {SensorsService} from "../../service/sensors-service.service";
 })
 export class YandexMapsComponent implements OnInit {
   private _center: Array<number> = [];
-  // public zoom: number = 16;
   public get center(): Array<number> {
     return this._center;
   }
@@ -37,24 +38,52 @@ export class YandexMapsComponent implements OnInit {
     },
     {
       minZoom: 5,
-      maxZoom: 16
+      maxZoom: 16,
+      restrictMapArea: [
+        [55.141278, 73.057086],
+        [54.868814, 73.621817]
+      ]
     });
-    // const myGeoObject = new ymaps.GeoObject({
-    //   geometry: {
-    //     type: "Point",
-    //     coordinates: [lat, lng]
-    //   }
-    // });
-    // myMap.geoObjects.add(myGeoObject);
+    /* границы Омска */
+    var myPolygon = new ymaps.Polygon([
+      [
+        [55.116930, 73.255865],
+        [55.100417, 73.173918],
+        [55.136214, 73.187147],
+        [55.141762, 73.153131],
+        [54.945587, 73.145994],
+        [54.937180, 73.245004],
+        [54.822915, 73.300415],
+        [54.864133, 73.491511],
+        [54.888610, 73.515136],
+        [54.939507, 73.523784],
+        [54.949600, 73.615530],
+        [55.010378, 73.599217],
+        [55.072512, 73.531065]
+      ]
+    ], {
+
+    }, {
+      fillColor: 'rgba(216,250,219,0.34)',
+      strokeWidth: 1,
+      opacity: 0.8
+    });
+    myMap.geoObjects.add(myPolygon);
+    const myGeoObject = new ymaps.GeoObject({
+      geometry: {
+        type: "Point",
+        coordinates: [lat, lng]
+      }
+    });
+    myMap.geoObjects.add(myGeoObject);
 
     let markers = [
       [55.032005688796886,73.49408631658085],
       [55.036722384724555,73.42678133767092],
       [55.01601342901014,73.43656603615727],
-      [55.027256767102514,73.37991778176276],
-      [55.04027141234805,73.3268744162842],
+      [55.043548, 73.327829],
       [55.05479338409094,73.28249448335919],
-      [55.04130517127677,73.23625346705798],
+      [55.052657, 73.237474],
       [55.05185213515002,73.19308220514624],
       [55.0296855226365,73.2519306061508],
       [55.025216854741515,73.32286259242446],
@@ -73,15 +102,46 @@ export class YandexMapsComponent implements OnInit {
           Object.keys(res).forEach(arr => {
             if (arr === 'list'){
               Object.keys(res[arr]).forEach(_arr => {
-                myMap.geoObjects.add(new ymaps.GeoObject({
-                  geometry: {
-                    type: "Point",
-                    coordinates: markers[i]
-                  },
-                  properties: {
-                    iconContent: res[arr][_arr].main.aqi
-                  }
-                }));
+                var circle = new ymaps.Circle([
+                  markers[i],
+                  1000
+                ],{
+                  balloonContent:
+                    `
+                      <h2>Прогноз индекса загрязненности воздуха</h2>
+                      <div class="card" style="width: 100%;">
+                        <div class="card-body">
+                          <h3 class="card-title">
+                            Прогноз на ${moment().format('l')}
+                          </h3>
+                          <p class="card-text">Скоро здесь будет прогноз..</p>
+                        </div>
+                      </div>
+                    `,
+                  hintContent: `Индекс загрязненности: ${res[arr][_arr].main.aqi}`
+                },{
+                  draggable: false,
+                  fillColor:
+                    res[arr][_arr].main.aqi == 1
+                    ? ColorAir.Well
+                    : res[arr][_arr].main.aqi == 2
+                    ? ColorAir.Medium
+                    : res[arr][_arr].main.aqi == 3
+                    ? ColorAir.Bad
+                    : res[arr][_arr].main.aqi == 4
+                    ? ColorAir.VeryBad : ColorAir.VeryVeryBad,
+                  fillOpacity: 0.8
+                });
+                myMap.geoObjects.add(circle)
+                // myMap.geoObjects.add(new ymaps.GeoObject({
+                //   geometry: {
+                //     type: "Point",
+                //     coordinates: markers[i]
+                //   },
+                //   properties: {
+                //     iconContent: res[arr][_arr].main.aqi
+                //   }
+                // }));
               })
             }
           });
