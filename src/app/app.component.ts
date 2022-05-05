@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {LocationService} from "../service/location-service.service";
+import {randomLocation} from 'random-location'
 
 @Component({
   selector: 'app-root',
