@@ -15,6 +15,7 @@ import {TableModule} from "primeng/table";
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import { YandexMapsComponent } from './yandex-maps/yandex-maps.component';
 import { HttpService } from '../service/http-service.service';
+import {MarkersService} from "../service/markers-service.service";
 const mapConfig: YaConfig = {
   apikey: '2cd6704d-9e98-4e03-b754-681f18196dca',
   lang: 'ru_RU',
@@ -36,7 +37,7 @@ const mapConfig: YaConfig = {
     TableModule,
     MatProgressBarModule
   ],
-  providers: [LocationService, SensorsService, HttpService],
+  providers: [LocationService, SensorsService, HttpService, MarkersService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

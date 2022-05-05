@@ -10,20 +10,24 @@ export class SensorsService {
   constructor(private httpClient: HttpClient, private locationService: LocationService) {}
 
   /* get sensors history */
-  /* start */
-  /* end */
   public getSensorsHistory(): Promise<Observable<any>> {
     return this.locationService.getPositions().then(result => {
       return this.httpClient
         .get(`https://api.openweathermap.org/data/2.5/air_pollution/history?lat=${result.lat}&lon=${result.lng}&start=${moment().startOf('years').unix()}&end=${moment().unix()}&appid=a50cfb70fe89823fb332df31e05285ea`)
     });
   }
-/* forecast for 5 days */
+
+  /* forecast for 5 days */
   public getSensorsForecast(): Promise<Observable<any>> {
-    console.log(moment().format())
     return this.locationService.getPositions().then(result => {
       return this.httpClient
       .get(`https://api.openweathermap.org/data/2.5/air_pollution/forecast?lat=${result.lat}&lon=${result.lng}&appid=a50cfb70fe89823fb332df31e05285ea`);
     });
+  }
+
+  public getSensordAir(center): Observable<any> {
+    console.log(center)
+      return this.httpClient
+        .get(`http://api.openweathermap.org/data/2.5/air_pollution?lat=${center[0]}&lon=${center[1]}&appid=a50cfb70fe89823fb332df31e05285ea`);
   }
 }
