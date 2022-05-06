@@ -4,6 +4,7 @@ import {MarkersService} from "../../service/markers-service.service";
 import {SensorsService} from "../../service/sensors-service.service";
 import {ColorAir} from "../shared/enums";
 import * as moment from "moment";
+import { RequestsService } from 'src/service/requests-service.service';
 
 @Component({
   selector: 'app-yandex-maps',
@@ -18,7 +19,8 @@ export class YandexMapsComponent implements OnInit {
   constructor(
     private locationService: LocationService,
     private markersService: MarkersService,
-    private sensorsService: SensorsService) {}
+    private sensorsService: SensorsService,
+    private requestService: RequestsService) {}
 
   public ngOnInit(): void {
     this.locationService.getPositions().then(result => {
@@ -29,7 +31,18 @@ export class YandexMapsComponent implements OnInit {
     });
   }
 
+  public getForecast(): void {
+    this.requestService.getForecasts().subscribe(res => {
+      return res;
+    });
+  }
+  
+  
+  // Usage Example.
+  // Generates 100 points that is in a 1km radius from the given lat and lng point.
+
   public yandexMaps(lat: any, lng: any): void {
+    const a = this.markersService.generateRandomPoints({'lat':lat, 'lng':lng}, 1000, 100);
     const myMap = new ymaps.Map('map',
     {
       center: [lat, lng],
@@ -39,10 +52,10 @@ export class YandexMapsComponent implements OnInit {
     {
       minZoom: 5,
       maxZoom: 16,
-      restrictMapArea: [
-        [55.141278, 73.057086],
-        [54.868814, 73.621817]
-      ]
+      // restrictMapArea: [
+      //   [55.141278, 73.057086],
+      //   [54.868814, 73.621817]
+      // ]
     });
     /* границы Омска */
     var myPolygon = new ymaps.Polygon([
@@ -96,57 +109,74 @@ export class YandexMapsComponent implements OnInit {
       [54.97514961684365,73.4747901090303],
       [54.946370672058684,73.43576407679213]
     ]
-    for (let i = 0; i < markers.length; i++) {
-      this.sensorsService.getSensordAir(markers[i])
+    a.forEach(i => {
+      this.sensorsService.getSensordAir([i.lat, i.lng])
         .subscribe(res => {
           Object.keys(res).forEach(arr => {
             if (arr === 'list'){
               Object.keys(res[arr]).forEach(_arr => {
                 var circle = new ymaps.Circle([
-                  markers[i],
+                  [i.lat, i.lng],
                   1000
-                ],{
-                  balloonContent:
-                    `
-                      <h2>Прогноз индекса загрязненности воздуха</h2>
-                      <div class="card" style="width: 100%;">
-                        <div class="card-body">
-                          <h3 class="card-title">
-                            Прогноз на ${moment().format('l')}
-                          </h3>
-                          <p class="card-text">Скоро здесь будет прогноз..</p>
-                        </div>
-                      </div>
-                    `,
-                  hintContent: `Индекс загрязненности: ${res[arr][_arr].main.aqi}`
-                },{
-                  draggable: false,
-                  fillColor:
-                    res[arr][_arr].main.aqi == 1
-                    ? ColorAir.Well
-                    : res[arr][_arr].main.aqi == 2
-                    ? ColorAir.Medium
-                    : res[arr][_arr].main.aqi == 3
-                    ? ColorAir.Bad
-                    : res[arr][_arr].main.aqi == 4
-                    ? ColorAir.VeryBad : ColorAir.VeryVeryBad,
-                  fillOpacity: 0.8
-                });
-                myMap.geoObjects.add(circle)
-                // myMap.geoObjects.add(new ymaps.GeoObject({
-                //   geometry: {
-                //     type: "Point",
-                //     coordinates: markers[i]
-                //   },
-                //   properties: {
-                //     iconContent: res[arr][_arr].main.aqi
-                //   }
-                // }));
+                ]);
+                myMap.geoObjects.add(circle);
               })
             }
-          });
-        })
-    }
+          }
+        )
+    })
+  });
+    // for (let i = 0; i < a.length; i++) {
+    //   this.sensorsService.getSensordAir(a[i])
+    //     .subscribe(res => {
+    //       Object.keys(res).forEach(arr => {
+    //         if (arr === 'list'){
+    //           Object.keys(res[arr]).forEach(_arr => {
+    //             var circle = new ymaps.Circle([
+    //               a[i],
+    //               1000
+    //             ],{
+    //               balloonContent:
+    //                 `
+    //                   <h2>Прогноз индекса загрязненности воздуха</h2>
+    //                   <div class="card" style="width: 100%;">
+    //                     <div class="card-body">
+    //                       <h3 class="card-title">
+    //                         Прогноз на ${moment().format('l')}
+    //                       </h3>
+    //                       <p class="card-text">Скоро здесь будет прогноз..</p>
+    //                     </div>
+    //                   </div>
+    //                 `,
+    //               hintContent: `Индекс загрязненности: ${res[arr][_arr].main.aqi}`
+    //             },{
+    //               draggable: false,
+    //               fillColor:
+    //                 res[arr][_arr].main.aqi == 1
+    //                 ? ColorAir.Well
+    //                 : res[arr][_arr].main.aqi == 2
+    //                 ? ColorAir.Medium
+    //                 : res[arr][_arr].main.aqi == 3
+    //                 ? ColorAir.Bad
+    //                 : res[arr][_arr].main.aqi == 4
+    //                 ? ColorAir.VeryBad : ColorAir.VeryVeryBad,
+    //               fillOpacity: 0.8
+    //             });
+    //             myMap.geoObjects.add(circle);
+    //             // myMap.geoObjects.add(new ymaps.GeoObject({
+    //             //   geometry: {
+    //             //     type: "Point",
+    //             //     coordinates: markers[i]
+    //             //   },
+    //             //   properties: {
+    //             //     iconContent: res[arr][_arr].main.aqi
+    //             //   }
+    //             // }));
+    //           })
+    //         }
+    //       });
+    //     })
+    // }
 
     // for (let i=0; i < 2000; i++){
     //   myMap.geoObjects.add(new ymaps.GeoObject({
