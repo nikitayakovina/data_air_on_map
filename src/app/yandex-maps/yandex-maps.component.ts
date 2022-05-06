@@ -7,6 +7,7 @@ import * as moment from "moment";
 import {RequestsService} from "../../service/requests-service.service";
 import bbox from '@turf/bbox';
 import * as turf from '@turf/turf';
+import { RequestsService } from 'src/service/requests-service.service';
 
 @Component({
   selector: 'app-yandex-maps',
@@ -91,8 +92,13 @@ export class YandexMapsComponent implements OnInit {
       return res;
     })
   }
+  
+  
+  // Usage Example.
+  // Generates 100 points that is in a 1km radius from the given lat and lng point.
 
   public yandexMaps(lat: any, lng: any): void {
+    const a = this.markersService.generateRandomPoints({'lat':lat, 'lng':lng}, 1000, 100);
     const myMap = new ymaps.Map('map',
     {
       center: [lat, lng],
@@ -135,6 +141,11 @@ export class YandexMapsComponent implements OnInit {
       fillColor: 'rgba(216,250,219,0.34)',
       strokeWidth: 1,
       opacity: 0.8
+      maxZoom: 16,
+      // restrictMapArea: [
+      //   [55.141278, 73.057086],
+      //   [54.868814, 73.621817]
+      // ]
     });
 
     myMap.geoObjects.add(myPolygon1)
@@ -213,6 +224,25 @@ export class YandexMapsComponent implements OnInit {
 
     // for (let i = 0; i < markers.length; i++) {
     //   this.sensorsService.getSensordAir(markers[i])
+    a.forEach(i => {
+      this.sensorsService.getSensordAir([i.lat, i.lng])
+        .subscribe(res => {
+          Object.keys(res).forEach(arr => {
+            if (arr === 'list'){
+              Object.keys(res[arr]).forEach(_arr => {
+                var circle = new ymaps.Circle([
+                  [i.lat, i.lng],
+                  1000
+                ]);
+                myMap.geoObjects.add(circle);
+              })
+            }
+          }
+        )
+    })
+  });
+    // for (let i = 0; i < a.length; i++) {
+    //   this.sensorsService.getSensordAir(a[i])
     //     .subscribe(res => {
     //       Object.keys(res).forEach(arr => {
     //         if (arr === 'list'){
