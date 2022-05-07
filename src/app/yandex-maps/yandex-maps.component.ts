@@ -1378,6 +1378,7 @@ export class YandexMapsComponent implements OnInit {
             Object.keys(sensor).forEach(_sensor => {
               if (_sensor === 'list') {
                 Object.keys(sensor[_sensor]).forEach(__sensor => {
+                  // console.log(sensor[_sensor][__sensor].components.co)
                   coord.map(i => [i[0], i[1]] = [i[1], i[0]]);
                   var myPolygon4 = new ymaps.Polygon(
                     [coord], 
@@ -1394,7 +1395,21 @@ export class YandexMapsComponent implements OnInit {
                         </div>
                       </div>
                     `,
-                      hintContent: `Индекс загрязненности воздуха: ${sensor[_sensor][__sensor].main.aqi.toString()}`
+                      hintContent: `
+                        <div class="card">
+                          <h4 class="card-title" style="margin: 10px">Индекс загрязненности: <b>${sensor[_sensor][__sensor].main.aqi.toString()}</b></h4>
+                          <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Монооксид углерода: <b>${sensor[_sensor][__sensor].components.co} мкг/м<sup><small>3</small></sup></b></li>
+                            <li class="list-group-item">Оксид азота: <b>${sensor[_sensor][__sensor].components.no} мкг/м<sup><small>3</small></sup></b></li>
+                            <li class="list-group-item">Двуокись азота: <b>${sensor[_sensor][__sensor].components.no2} мкг/м<sup><small>3</small></sup></b></li>
+                            <li class="list-group-item">Озон: <b>${sensor[_sensor][__sensor].components.o3} мкг/м<sup><small>3</small></sup></b></li>
+                            <li class="list-group-item">Оксид серы: <b>${sensor[_sensor][__sensor].components.so2} мкг/м<sup><small>3</small></sup></b></li>
+                            <li class="list-group-item">Частицы РМ2.5 (мелкие твердые частицы и капли жидкости): <b>${sensor[_sensor][__sensor].components.pm2_5} мкг/м<sup><small>3</small></sup></b></li>
+                            <li class="list-group-item">Частицы РМ10 (крупные и грубые частицы): <b>${sensor[_sensor][__sensor].components.pm10} мкг/м<sup><small>3</small></sup></b></li>
+                            <li class="list-group-item">Аммиак: <b>${sensor[_sensor][__sensor].components.nh3} мкг/м<sup><small>3</small></sup></b></li>
+                          </ul>
+                        </div>
+                      `
                     }, 
                     {
                     fillColor: 
