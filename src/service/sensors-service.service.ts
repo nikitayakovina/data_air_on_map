@@ -27,6 +27,6 @@ export class SensorsService {
 
   public getSensordAir(center): Observable<any> {
       return this.httpClient
-        .get(`http://api.openweathermap.org/data/2.5/air_pollution?lat=${center[0]}&lon=${center[1]}&appid=a50cfb70fe89823fb332df31e05285ea`);
+        .get(`http://api.openweathermap.org/data/2.5/air_pollution?lat=${center[0]}&lon=${center[1]}&appid=d570b08169ed4d106ceede5e7ee96426`);
   }
 }

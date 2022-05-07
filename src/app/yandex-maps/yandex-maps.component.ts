@@ -26,7 +26,7 @@ export class YandexMapsComponent implements OnInit {
 
   public ngOnInit(): void {
     this.locationService.getPositions().then(result => {
-      this._center.push(result.lat, result.lng)
+      this._center.push(result.lat, result.lng);
       ymaps.ready(() => {
         this.yandexMaps(result.lat, result.lng);
       });
@@ -40,7 +40,6 @@ export class YandexMapsComponent implements OnInit {
   }
   
   public yandexMaps(lat: any, lng: any): void {
-    const a = this.markersService.generateRandomPoints({'lat':lat, 'lng':lng}, 1000, 100);
     const myMap = new ymaps.Map('map',
     {
       center: [lat, lng],
@@ -56,56 +55,6 @@ export class YandexMapsComponent implements OnInit {
       // ]
     });
 
-
-    var myPolygon1 = new ymaps.Polygon([
-      [
-        [55.043797, 73.489265],
-        [55.025099, 73.504028],
-        [55.020866, 73.462143],
-        [55.031792, 73.419571],
-        [55.053438, 73.423519]
-      ],
-      [
-        [55.027442, 73.350134],
-        [55.018582, 73.3146],
-        [55.006865, 73.34301],
-        [55.009671, 73.353739]
-      ],
-      [
-        [55.036009, 73.377943],
-        [55.026069, 73.352108],
-        [55.008544, 73.355284],
-        [55.009135, 73.374081]
-      ]
-    ], {
-
-    }, {
-      fillColor: 'rgba(216,250,219,0.34)',
-      strokeWidth: 1,
-      opacity: 0.8
-      // restrictMapArea: [
-      //   [55.141278, 73.057086],
-      //   [54.868814, 73.621817]
-      // ]
-    });
-
-    // myMap.geoObjects.add(myPolygon1)
-
-    /* границы Омска */
-    var myPolygon = new ymaps.Polygon([
-      [
-        [55.043797, 73.489265],
-        [55.025099, 73.504028],
-        [55.020866, 73.462143],
-        [55.031792, 73.419571],
-        [55.053438, 73.423519]
-      ]
-    ], {}, {
-      fillColor: 'rgba(216,250,219,0.34)',
-      strokeWidth: 1,
-      opacity: 0.8
-    });
-    // myMap.geoObjects.add(myPolygon);
     const myGeoObject = new ymaps.GeoObject({
       geometry: {
         type: "Point",
@@ -1424,7 +1373,7 @@ export class YandexMapsComponent implements OnInit {
 
     json.features.forEach(res => {
       res.geometry.coordinates.forEach(coord => {
-        this.sensorsService.getSensordAir(coord[0])
+        this.sensorsService.getSensordAir(this.centerByPolygon(coord))
           .subscribe(sensor => {
             Object.keys(sensor).forEach(_sensor => {
               if (_sensor === 'list') {
@@ -1467,75 +1416,34 @@ export class YandexMapsComponent implements OnInit {
           });
       });
     });
-
-    // for (let i = 0; i < a.length; i++) {
-    //   this.sensorsService.getSensordAir(a[i])
-    //     .subscribe(res => {
-    //       Object.keys(res).forEach(arr => {
-    //         if (arr === 'list'){
-    //           Object.keys(res[arr]).forEach(_arr => {
-    //             var circle = new ymaps.Circle([
-    //               markers[i],
-    //               1000
-    //             ],{
-    //               balloonContent:
-    //                 `
-    //                   <h2>Прогноз индекса загрязненности воздуха</h2>
-    //                   <div class="card" style="width: 100%;">
-    //                     <div class="card-body">
-    //                       <h3 class="card-title">
-    //                         Прогноз на ${moment().format('l')}
-    //                       </h3>
-    //                       <p class="card-text">Скоро здесь будет прогноз..</p>
-    //                     </div>
-    //                   </div>
-    //                 `,
-    //               hintContent: `Индекс загрязненности: ${res[arr][_arr].main.aqi}`
-    //             },{
-    //               draggable: false,
-    //               fillColor:
-    //                 res[arr][_arr].main.aqi == 1
-    //                 ? ColorAir.Well
-    //                 : res[arr][_arr].main.aqi == 2
-    //                 ? ColorAir.Medium
-    //                 : res[arr][_arr].main.aqi == 3
-    //                 ? ColorAir.Bad
-    //                 : res[arr][_arr].main.aqi == 4
-    //                 ? ColorAir.VeryBad : ColorAir.VeryVeryBad,
-    //               fillOpacity: 0.8,
-    //               strokeColor:
-    //                 res[arr][_arr].main.aqi == 1
-    //                 ? ColorAir.Well
-    //                 : res[arr][_arr].main.aqi == 2
-    //                 ? ColorAir.Medium
-    //                 : res[arr][_arr].main.aqi == 3
-    //                 ? ColorAir.Bad
-    //                 : res[arr][_arr].main.aqi == 4
-    //                 ? ColorAir.VeryBad : ColorAir.VeryVeryBad
-    //             });
-    //             myMap.geoObjects.add(circle)
-                // myMap.geoObjects.add(new ymaps.GeoObject({
-                //   geometry: {
-                //     type: "Point",
-                //     coordinates: markers[i]
-                //   },
-                //   properties: {
-                //     iconContent: res[arr][_arr].main.aqi
-                //   }
-                // }));
-    //           })
-    //         }
-    //       });
-    //     })
-    // }
-
-    // for (let i=0; i < 2000; i++){
-    //   myMap.geoObjects.add(new ymaps.GeoObject({
-    //     geometry: {
-    //       type: "Point",
-    //       coordinates: this.markersService.radiusByCenter([lat, lng])
-    //     }
-    //   }))
-    // }
   }
+
+  public centerByPolygon(coord: number[][]): Array<number> {
+    var minX, maxX, minY, maxY;
+    for (var i = 0; i < coord.length; i++)
+    {
+        minX = (coord[i][0] < minX || minX == null) ? coord[i][0] : minX;
+        maxX = (coord[i][0] > maxX || maxX == null) ? coord[i][0] : maxX;
+        minY = (coord[i][1] < minY || minY == null) ? coord[i][1] : minY;
+        maxY = (coord[i][1] > maxY || maxY == null) ? coord[i][1] : maxY;
+    }
+    return [(minY + maxY) / 2, (minX + maxX) / 2];
+  }
+/* Вычисление среднего значения */
+  // public calcAverageValue(arrCoord: number[][], centerCoord: number[]): number {
+  //   let newArr = [...arrCoord, [...centerCoord]];
+  //   newArr.forEach(arr => {
+  //     this.sensorsService.getSensordAir([arr[0], arr[1]])
+  //       .subscribe(sensor => {
+  //         Object.keys(sensor).forEach(_sensor => {
+  //           if (_sensor === 'list') {
+  //             Object.keys(sensor[_sensor]).forEach(__sensor => {
+  //               console.log('1',_sensor)
+  //             });
+  //           }
+  //         });
+  //       });
+  //   })
+  //   return 0;
+  // }
 }
