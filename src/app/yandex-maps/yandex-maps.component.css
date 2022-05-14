@@ -2,3 +2,27 @@
   width: 1000px;
   height: 500px;
 }
+.card-title-custom {
+  margin: 0;
+  padding: 0;
+  align-self: center;
+}
+.card-custom {
+  width: 18rem;
+  position: absolute;
+  top: 5.4%;
+  z-index: 30001;
+  right: 0;
+  border: 1px solid #d9d9d9;
+}
+.card-block {
+  display: flex;
+}
+.card-color {
+  width: 18px; 
+  height: 18px; 
+  align-self: center;
+}
+.card-color-text{
+  margin-left: 10px;
+}

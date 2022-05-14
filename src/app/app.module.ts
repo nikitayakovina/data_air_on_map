@@ -18,6 +18,7 @@ import {MarkersService} from "../service/markers-service.service";
 import {RequestsService} from "../service/requests-service.service";
 import {MainPageComponent} from "./main-page/main-page.component";
 import { LeafletMapsComponent } from './leaflet-maps/leaflet-maps.component';
+import { WeatherService } from 'src/service/weather-service.service';
 const mapConfig: YaConfig = {
   apikey: '2cd6704d-9e98-4e03-b754-681f18196dca',
   lang: 'ru_RU',
@@ -41,7 +42,7 @@ const mapConfig: YaConfig = {
     TableModule,
     MatProgressBarModule
   ],
-  providers: [LocationService, SensorsService, RequestsService, MarkersService],
+  providers: [LocationService, SensorsService, RequestsService, MarkersService, WeatherService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

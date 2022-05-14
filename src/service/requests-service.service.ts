@@ -6,11 +6,7 @@ export class RequestsService {
     private _rootURL = '/api';
     constructor(private http: HttpClient){}
 
-    public getForecasts() {
-        return this.http.get(this._rootURL + '/arrForecast');
-    }
-
-    public addForecast(forecast: any) {
-        return this.http.post(this._rootURL + '/forecast', {forecast});
+    public getForecasts(center: any) {
+        return this.http.get(this._rootURL + `/getForecasts:${center}`);
     }
 }

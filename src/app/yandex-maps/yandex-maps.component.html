@@ -1,3 +1,32 @@
 <mat-progress-bar *ngIf="!center?.length" [mode]="'indeterminate'" [color]="'primary'"></mat-progress-bar>
+<div class="card card-custom">
+    <div class="card-title card-title-custom">
+        <h4 style="margin:0"><b>Индекс качества воздуха</b></h4>
+    </div>
+    <div class="card-body">
+      <div class="card-text card-text-custom">
+        <div class="card-block">
+            <div class="card-color" [ngStyle]="{'background-color': colorWell}"></div>
+            <div class="card-color-text"><b>1</b> - Хорошо</div>
+        </div>
+        <div class="card-block">
+            <div class="card-color" [ngStyle]="{'background-color': colorMedium}"></div>
+            <div class="card-color-text"><b>2</b> - Удовлетворительно</div>
+        </div>
+        <div class="card-block">
+            <div class="card-color" [ngStyle]="{'background-color': colorBad}"></div>
+            <div class="card-color-text"><b>3</b> - Умеренно</div>
+        </div>
+        <div class="card-block">
+            <div class="card-color" [ngStyle]="{'background-color': colorVeryBad}"></div>
+            <div class="card-color-text"><b>4</b> - Плохо</div>
+        </div>
+        <div class="card-block">
+            <div class="card-color" [ngStyle]="{'background-color': colorVeryVeryBad}"></div>
+            <div class="card-color-text"><b>5</b> - Очень плохо</div>
+        </div>
+      </div>
+    </div>
+  </div>
 <div id="map" style="height: 1000px"></div>
 

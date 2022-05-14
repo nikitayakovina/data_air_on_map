@@ -7,6 +7,7 @@ import * as moment from "moment";
 import {RequestsService} from "../../service/requests-service.service";
 import bbox from '@turf/bbox';
 import * as turf from '@turf/turf';
+import { WeatherService } from 'src/service/weather-service.service';
 
 @Component({
   selector: 'app-yandex-maps',
@@ -14,6 +15,11 @@ import * as turf from '@turf/turf';
   styleUrls: ['./yandex-maps.component.css']
 })
 export class YandexMapsComponent implements OnInit {
+  public colorWell = ColorAir.Well;
+  public colorMedium = ColorAir.Medium;
+  public colorBad = ColorAir.Bad;
+  public colorVeryBad = ColorAir.VeryBad;
+  public colorVeryVeryBad = ColorAir.VeryVeryBad;
   private _center: Array<number> = [];
   public get center(): Array<number> {
     return this._center;
@@ -22,7 +28,8 @@ export class YandexMapsComponent implements OnInit {
     private locationService: LocationService,
     private markersService: MarkersService,
     private sensorsService: SensorsService,
-    private requestsService: RequestsService) {}
+    private requestsService: RequestsService, 
+    private weatherService: WeatherService) {}
 
   public ngOnInit(): void {
     this.locationService.getPositions().then(result => {
@@ -33,8 +40,8 @@ export class YandexMapsComponent implements OnInit {
     });
   }
 
-  public getForecast(): void {
-    this.requestsService.getForecasts().subscribe(res => {
+  public doForecasts(coord: any): void {
+    this.requestsService.getForecasts(coord).subscribe(res => {
       return res;
     })
   }
@@ -43,7 +50,7 @@ export class YandexMapsComponent implements OnInit {
     const myMap = new ymaps.Map('map',
     {
       center: [lat, lng],
-      zoom: 18,
+      zoom: 12,
       controls: ['zoomControl']
     },
     {
@@ -63,7 +70,7 @@ export class YandexMapsComponent implements OnInit {
     });
     myMap.geoObjects.add(myGeoObject);
 
-    var json = {
+    const json = {
       "type": "FeatureCollection",
       "features": [
         {
@@ -78,8 +85,8 @@ export class YandexMapsComponent implements OnInit {
                   55.04140120974331
                 ],
                 [
-                  73.4267807006836,
-                  55.04307328272744
+                  73.42654466629028,
+                  55.043113239499974
                 ],
                 [
                   73.40497970581055,
@@ -117,8 +124,8 @@ export class YandexMapsComponent implements OnInit {
                   55.00125051509462
                 ],
                 [
-                  73.45218658447266,
-                  54.997115072188265
+                  73.45218926668166,
+                  54.997322008312935
                 ],
                 [
                   73.45149993896484,
@@ -136,8 +143,8 @@ export class YandexMapsComponent implements OnInit {
             "coordinates": [
               [
                 [
-                  73.45252990722656,
-                  54.997115072188265
+                  73.45231801271439,
+                  54.99734431734816
                 ],
                 [
                   73.4274673461914,
@@ -156,8 +163,8 @@ export class YandexMapsComponent implements OnInit {
                   54.97830327575534
                 ],
                 [
-                  73.45252990722656,
-                  54.997115072188265
+                  73.45231801271439,
+                  54.99734431734816
                 ]
               ]
             ]
@@ -377,8 +384,12 @@ export class YandexMapsComponent implements OnInit {
                   55.03563448148282
                 ],
                 [
-                  73.34824562072754,
-                  55.052858427816574
+                  73.35361540317535,
+                  55.04228335988717
+                ],
+                [
+                  73.36768627166748,
+                  55.04816283998316
                 ],
                 [
                   73.32069396972655,
@@ -634,8 +645,8 @@ export class YandexMapsComponent implements OnInit {
                   54.977638299652334
                 ],
                 [
-                  73.30575942993164,
-                  54.97157912119791
+                  73.30569505691528,
+                  54.971606832936466
                 ],
                 [
                   73.33288192749023,
@@ -728,20 +739,20 @@ export class YandexMapsComponent implements OnInit {
             "coordinates": [
               [
                 [
-                  73.34494113922119,
-                  54.968733947615576
+                  73.34228038787842,
+                  54.972121036171615
                 ],
                 [
-                  73.34410429000854,
-                  54.96848760275978
+                  73.34184050559998,
+                  54.97220109117283
                 ],
                 [
-                  73.34393262863159,
-                  54.96740366744498
+                  73.33754897117615,
+                  54.97213951041682
                 ],
                 [
-                  73.34700107574461,
-                  54.96247632007383
+                  73.34047794342041,
+                  54.96128134728288
                 ],
                 [
                   73.33910465240477,
@@ -756,8 +767,8 @@ export class YandexMapsComponent implements OnInit {
                   54.96165093029301
                 ],
                 [
-                  73.34494113922119,
-                  54.968733947615576
+                  73.34228038787842,
+                  54.972121036171615
                 ]
               ]
             ]
@@ -822,8 +833,8 @@ export class YandexMapsComponent implements OnInit {
                   54.93216138486568
                 ],
                 [
-                  73.38163375854492,
-                  54.90691565330199
+                  73.37886571884155,
+                  54.90274581694464
                 ],
                 [
                   73.39056015014648,
@@ -970,8 +981,8 @@ export class YandexMapsComponent implements OnInit {
                   55.005090187548774
                 ],
                 [
-                  73.20842742919922,
-                  54.99898592058885
+                  73.20834159851074,
+                  54.998272054518296
                 ],
                 [
                   73.23263168334961,
@@ -1310,8 +1321,8 @@ export class YandexMapsComponent implements OnInit {
                   54.96933748612686
                 ],
                 [
-                  73.29408645629883,
-                  54.97007650052403
+                  73.294837474823,
+                  54.97018889110567
                 ],
                 [
                   73.26456069946289,
@@ -1345,8 +1356,8 @@ export class YandexMapsComponent implements OnInit {
                   55.04312246028798
                 ],
                 [
-                  73.40858459472656,
-                  55.05089175647037
+                  73.4083217382431,
+                  55.05123132146906
                 ],
                 [
                   73.37706327438354,
@@ -1367,23 +1378,270 @@ export class YandexMapsComponent implements OnInit {
               ]
             ]
           }
+        },
+        {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  73.33287388086319,
+                  54.97583264926665
+                ],
+                [
+                  73.30569874495268,
+                  54.97160452362566
+                ],
+                [
+                  73.29490184783936,
+                  54.9701873515108
+                ],
+                [
+                  73.28716099262238,
+                  54.96931285207945
+                ],
+                [
+                  73.2835990190506,
+                  54.967209664572394
+                ],
+                [
+                  73.28225791454315,
+                  54.96429334975915
+                ],
+                [
+                  73.27307134866714,
+                  54.96320930126001
+                ],
+                [
+                  73.27340126037598,
+                  54.96203282916512
+                ],
+                [
+                  73.27463507652283,
+                  54.961657089981024
+                ],
+                [
+                  73.27758550643921,
+                  54.96189731707762
+                ],
+                [
+                  73.2867693901062,
+                  54.96002473961785
+                ],
+                [
+                  73.29037964344025,
+                  54.95574181459165
+                ],
+                [
+                  73.2996118068695,
+                  54.95549693021652
+                ],
+                [
+                  73.30805271863937,
+                  54.956699775608506
+                ],
+                [
+                  73.30950379371643,
+                  54.95605754381635
+                ],
+                [
+                  73.31150874495505,
+                  54.9547699690673
+                ],
+                [
+                  73.31852674484253,
+                  54.95812743397263
+                ],
+                [
+                  73.32942724227905,
+                  54.95871881157635
+                ],
+                [
+                  73.33335399627686,
+                  54.95774549797775
+                ],
+                [
+                  73.33835631608963,
+                  54.95342998503179
+                ],
+                [
+                  73.3371251821518,
+                  54.95253817779069
+                ],
+                [
+                  73.33890214562415,
+                  54.95154315015425
+                ],
+                [
+                  73.3390885591507,
+                  54.951553932319506
+                ],
+                [
+                  73.34035992622375,
+                  54.96128750702758
+                ],
+                [
+                  73.33734512329102,
+                  54.97218261695595
+                ],
+                [
+                  73.33287388086319,
+                  54.97583264926665
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  73.30556631088255,
+                  55.07500139436755
+                ],
+                [
+                  73.32054376602173,
+                  55.058284710564685
+                ],
+                [
+                  73.3678150177002,
+                  55.04821815770448
+                ],
+                [
+                  73.40901374816895,
+                  55.0657254494195
+                ],
+                [
+                  73.30556631088255,
+                  55.07500139436755
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  73.40839147567749,
+                  55.05124207687445
+                ],
+                [
+                  73.42657685279846,
+                  55.043165490603954
+                ],
+                [
+                  73.47540378570557,
+                  55.04143809445904
+                ],
+                [
+                  73.47552180290222,
+                  55.04157948555474
+                ],
+                [
+                  73.41926515102386,
+                  55.059181850675024
+                ],
+                [
+                  73.40839147567749,
+                  55.05124207687445
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  73.47557008266449,
+                  55.041564116981554
+                ],
+                [
+                  73.47538232803345,
+                  55.041364324993616
+                ],
+                [
+                  73.45149457454681,
+                  55.02305300207502
+                ],
+                [
+                  73.45153748989105,
+                  55.02289616985833
+                ],
+                [
+                  73.45234751701355,
+                  54.99736124143556
+                ],
+                [
+                  73.49083185195923,
+                  54.97845104672708
+                ],
+                [
+                  73.47557008266449,
+                  55.041564116981554
+                ]
+              ]
+            ]
+          }
+        },
+        {
+          "type": "Feature",
+          "properties": {},
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [
+                  73.26473504304884,
+                  55.064601132512195
+                ],
+                [
+                  73.3053906261921,
+                  55.07498757419491
+                ],
+                [
+                  73.24478477239609,
+                  55.088004061018026
+                ],
+                [
+                  73.26473504304884,
+                  55.064601132512195
+                ]
+              ]
+            ]
+          }
         }
       ]
     }
 
     json.features.forEach(res => {
       res.geometry.coordinates.forEach(coord => {
-        this.sensorsService.getSensordAir(this.centerByPolygon(coord))
+        const newCoord = this.centerByPolygon(coord);
+        this.sensorsService.getSensordAir(newCoord)
           .subscribe(sensor => {
             Object.keys(sensor).forEach(_sensor => {
               if (_sensor === 'list') {
                 Object.keys(sensor[_sensor]).forEach(__sensor => {
-                  // console.log(sensor[_sensor][__sensor].components.co)
                   coord.map(i => [i[0], i[1]] = [i[1], i[0]]);
                   var myPolygon4 = new ymaps.Polygon(
                     [coord], 
                     {
-                      balloonContent: 
+                      balloonContent:
                       `
                       <h2>Прогноз индекса загрязненности воздуха</h2>
                       <div class="card" style="width: 100%;">
@@ -1394,7 +1652,8 @@ export class YandexMapsComponent implements OnInit {
                           <p class="card-text">Скоро здесь будет прогноз..</p>
                         </div>
                       </div>
-                    `,
+                    `
+                    ,
                       hintContent: `
                         <div class="card">
                           <h4 class="card-title" style="margin: 10px">Индекс загрязненности: <b>${sensor[_sensor][__sensor].main.aqi.toString()}</b></h4>
@@ -1424,6 +1683,19 @@ export class YandexMapsComponent implements OnInit {
                     strokeWidth: 1,
                     opacity: 0.8
                   });
+                  
+                  myPolygon4.events
+                    .add('mouseenter', () => {
+                      myPolygon4.options.set('strokeColor', '#dc3545');
+                      myPolygon4.options.set('strokeWidth', 3);
+                    })
+                    .add('mousedown', () => {
+                      this.doForecasts(newCoord);
+                    })
+                    .add('mouseleave', ()=> {
+                      myPolygon4.options.unset('strokeColor');
+                      myPolygon4.options.unset('strokeWidth');
+                    })
                   myMap.geoObjects.add(myPolygon4);
                 })
               }
@@ -1443,6 +1715,10 @@ export class YandexMapsComponent implements OnInit {
         maxY = (coord[i][1] > maxY || maxY == null) ? coord[i][1] : maxY;
     }
     return [(minY + maxY) / 2, (minX + maxX) / 2];
+  }
+
+  public getDateNow(a): string {
+    return a;
   }
 /* Вычисление среднего значения */
   // public calcAverageValue(arrCoord: number[][], centerCoord: number[]): number {
