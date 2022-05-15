@@ -1,5 +1,75 @@
-<div class="container">
+<div class="container-fuild">
     <header>
         <h1>Узнайте о качестве воздуха в городе Омске</h1>
     </header>
+    <main>
+        <div class="yandex-map">
+            <div id="map" style="height: 500px"></div>
+            <div class="forecasts">
+                <div class="card">
+                    <div class="card-header card-title-custom">
+                        <h3>ТЕКУЩЕЕ КАЧЕСТВО ВОЗДУХА</h3>
+                    </div>
+                    <div class="card-body card-body-custom">
+                        <p class="card-time">{{timeNow}}</p>
+                        <div class="card-forecasts"
+                            [ngStyle]="{'background-color' : 
+                            airPolution == 1 ? colorWell :
+                            airPolution == 2 ? colorMedium :
+                            airPolution == 3 ? colorBad :
+                            airPolution == 4 ? colorVeryBad :
+                            colorVeryVeryBad }">
+                            <div class="forecasts-smile">
+                                <img [src]="
+                                airPolution == 1 ? '../../assets/img/air/well.png' :
+                                airPolution == 2 ? '../../assets/img/air/medium.png' :
+                                airPolution == 3 ? '../../assets/img/air/bad.png' :
+                                airPolution == 4 ? '../../assets/img/air/verybad.png' :
+                                '../../assets/img/air/veryverybad.png'
+                                " style="width: 70px;">
+                            </div>
+                            <div class="forecasts-index">
+                                <h1>{{airPolution}}</h1>
+                            </div>
+                            <div class="forecasts-text">
+                                <h2>
+                                    {{
+                                        airPolution == 1 ? 'Хорошо' :
+                                        airPolution == 2 ? 'Удовлетворительно' :
+                                        airPolution == 3 ? 'Умеренно' :
+                                        airPolution == 4 ? 'Плохо' :
+                                        'Очень плохо'
+                                    }}
+                                </h2>
+                            </div>
+                        </div>
+                        <div class="forecasts-description">
+                            <p *ngIf="airPolution == 1">
+                                Качество воздуха идеальное для большинства людей; можно проводить время на улице без ограничений.
+                            </p>
+                            <p *ngIf="airPolution == 2">
+                                Качество воздуха в целом является приемлемым для большинства людей. 
+                                Однако у людей с повышенной чувствительностью после длительного нахождения на улице могут появляться симптомы малой и средней тяжести.
+                            </p>
+                            <p *ngIf="airPolution == 3">
+                                Загрязнение воздуха достигло высокого уровня, он является небезопасным для людей с повышенной чувствительностью. 
+                                Если вы почувствуете затрудненное дыхание или раздражение горла, сократите время пребывания на улице.
+                            </p>
+                            <p *ngIf="airPolution == 4">
+                                Люди с повышенной чувствительностью могут мгновенно почувствовать себя плохо. 
+                                При продолжительном нахождении на улице здоровые люди могут почувствовать затрудненное дыхание или раздражение горла. Ограничьте пребывание на улице.
+                            </p>
+                            <p *ngIf="airPolution == 5">
+                                Люди с повышенной чувствительностью могут мгновенно почувствовать себя плохо, им следует избегать пребывания на улице. 
+                                У здоровых людей могут возникать симптомы затрудненного дыхания или раздражения горла; рекомендуется оставаться в помещении и перенести мероприятия на улице.
+                            </p>
+                        </div>
+                        <div class="forecasts-button">
+                            <button mat-raised-button color="primary" routerLink="/app-yandex-maps">Карта подробнее</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 </div>

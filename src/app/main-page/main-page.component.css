@@ -1,3 +1,61 @@
+h3 {
+    margin: 10px 0;
+    padding: 0;
+    line-height: 0;
+}
+img {
+    margin: 5px;
+}
 header {
-    margin: 20px;
+    margin: 50px;
+}
+.card-title-custom {
+    padding: 10px;
+}
+.card-time {
+    font-size: 12px;
+    color: gray;
+}
+.card-body-custom {
+    padding: 0 10px;
+}
+.main {
+    padding: 0;
+    margin-top: 30px;
+}
+.yandex-map {
+    position: relative;
+    width: 100%;
+}
+.card-forecasts {
+    display: flex;
+    border-radius: 5px;
+}
+.forecasts {
+    position: absolute;
+    top: 20%;
+    width:20%
+}
+.forecasts-smile {
+    width: 35%;
+    background: rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+.forecasts-index {
+    width: 35%;
+    align-self: center;
+    text-align: center;
+}
+.forecasts-text {
+    width: 35%;
+    align-self: center;
+    text-align: center;
+    margin-right: 10px;
+}
+.forecasts-description {
+    margin-top: 10px;
+    font-weight: bold;
+}
+.forecasts-button {
+    margin-bottom: 10px;
 }
