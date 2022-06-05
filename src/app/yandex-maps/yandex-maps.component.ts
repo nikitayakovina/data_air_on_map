@@ -1,13 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {LocationService} from "../../service/location-service.service";
-import {MarkersService} from "../../service/markers-service.service";
 import {SensorsService} from "../../service/sensors-service.service";
 import {ColorAir} from "../shared/enums";
 import * as moment from "moment";
 import {RequestsService} from "../../service/requests-service.service";
-import bbox from '@turf/bbox';
-import * as turf from '@turf/turf';
-import { WeatherService } from 'src/service/weather-service.service';
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'app-yandex-maps',
@@ -21,15 +18,15 @@ export class YandexMapsComponent implements OnInit {
   public colorVeryBad = ColorAir.VeryBad;
   public colorVeryVeryBad = ColorAir.VeryVeryBad;
   private _center: Array<number> = [];
+  private _dataPolygon: Object;
   public get center(): Array<number> {
     return this._center;
   }
   constructor(
     private locationService: LocationService,
-    private markersService: MarkersService,
     private sensorsService: SensorsService,
-    private requestsService: RequestsService, 
-    private weatherService: WeatherService) {}
+    private requestsService: RequestsService,
+    private http: HttpClient) {}
 
   public ngOnInit(): void {
     this.locationService.getPositions().then(result => {
@@ -43,9 +40,9 @@ export class YandexMapsComponent implements OnInit {
   public doForecasts(coord: any): void {
     this.requestsService.getForecasts(coord).subscribe(res => {
       return res;
-    })
+    });
   }
-  
+
   public yandexMaps(lat: any, lng: any): void {
     const myMap = new ymaps.Map('map',
     {
@@ -55,11 +52,7 @@ export class YandexMapsComponent implements OnInit {
     },
     {
       minZoom: 5,
-      maxZoom: 22,
-      // restrictMapArea: [
-      //   [55.141278, 73.057086],
-      //   [54.818015, 73.646356]
-      // ]
+      maxZoom: 22
     });
 
     const myGeoObject = new ymaps.GeoObject({
@@ -69,6 +62,8 @@ export class YandexMapsComponent implements OnInit {
       }
     });
     myMap.geoObjects.add(myGeoObject);
+
+
 
     const json = {
       "type": "FeatureCollection",
@@ -1639,7 +1634,7 @@ export class YandexMapsComponent implements OnInit {
                 Object.keys(sensor[_sensor]).forEach(__sensor => {
                   coord.map(i => [i[0], i[1]] = [i[1], i[0]]);
                   var myPolygon4 = new ymaps.Polygon(
-                    [coord], 
+                    [coord],
                     {
                       balloonContent:
                       `
@@ -1669,9 +1664,9 @@ export class YandexMapsComponent implements OnInit {
                           </ul>
                         </div>
                       `
-                    }, 
+                    },
                     {
-                    fillColor: 
+                    fillColor:
                     sensor[_sensor][__sensor].main.aqi == 1
                     ? ColorAir.Well
                     : sensor[_sensor][__sensor].main.aqi == 2
@@ -1683,7 +1678,7 @@ export class YandexMapsComponent implements OnInit {
                     strokeWidth: 1,
                     opacity: 0.8
                   });
-                  
+
                   myPolygon4.events
                     .add('mouseenter', () => {
                       myPolygon4.options.set('strokeColor', '#dc3545');
@@ -1717,24 +1712,9 @@ export class YandexMapsComponent implements OnInit {
     return [(minY + maxY) / 2, (minX + maxX) / 2];
   }
 
-  public getDateNow(a): string {
-    return a;
+  public dataByPolygon(): any {
+    this.requestsService.getDataByPolygon().subscribe(data => {
+      return data;
+    });
   }
-/* Вычисление среднего значения */
-  // public calcAverageValue(arrCoord: number[][], centerCoord: number[]): number {
-  //   let newArr = [...arrCoord, [...centerCoord]];
-  //   newArr.forEach(arr => {
-  //     this.sensorsService.getSensordAir([arr[0], arr[1]])
-  //       .subscribe(sensor => {
-  //         Object.keys(sensor).forEach(_sensor => {
-  //           if (_sensor === 'list') {
-  //             Object.keys(sensor[_sensor]).forEach(__sensor => {
-  //               console.log('1',_sensor)
-  //             });
-  //           }
-  //         });
-  //       });
-  //   })
-  //   return 0;
-  // }
 }
